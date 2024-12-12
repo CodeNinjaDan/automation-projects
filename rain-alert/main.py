@@ -35,9 +35,9 @@ if will_rain:
 
     try:
         message = client.messages.create(
+            from_=os.getenv("WHATSAPP_SENDER"),
             body="It's going to rain today. Bring an ☂️",
-            from_=os.getenv("SENDER_NUMBER"),
-            to=os.getenv("RECEIVER_NUMBER"),
+            to=os.getenv("WHATSAPP_RECEIVER"),
         )
         print(message.status)
     except Exception as e:
