@@ -33,29 +33,40 @@ class FlightSearch:
         response = requests.post(auth_url, headers=auth_headers, data=auth_data)
         response.raise_for_status()
         self.access_token = response.json()["access_token"]
-        print("New access token:", self.access_token)
+        # print("New access token:", self.access_token)
 
 
-    def start_scheduler(self):
-        schedule.every(30).minutes.do(self.new_access_token)
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
+    # def start_scheduler(self):
+    #     schedule.every(30).minutes.do(self.new_access_token)
+    #     while True:
+    #         schedule.run_pending()
+    #         time.sleep(1)
 
 
 
     def city_search(self):
-        iatacode = [prices['iataCode'] for prices in self.sheety_data]
-        # city_name = [prices['city'] for prices in self.sheety_data]
         city_url = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
         headers = {"Authorization": f"Bearer {self.access_token}"}
         city_params = {
             "keyword": [prices['city'] for prices in self.sheety_data],
+            "max": 2,
+            "include": "AIRPORTS",
         }
         response = requests.get(url=city_url, params=city_params, headers=headers)
+
+        if response.status_code != 200:
+            print(f"Error: Unable to fetch data, status code {response.status_code}")
+            return None
+
         data = response.json()
+        if 'data' not in data:
+            print("Error: 'data' key not found in the response")
+            return None
         pprint.pprint(data)
 
+        # Extract IATA codes from the response
+        iata_codes = {item['name']: item.get('iataCode') for item in data['data']}
+        return iata_codes
 
     # Request flight data
     def get_flight_data(self):
@@ -84,4 +95,4 @@ if __name__ == "__main__":
     flight_search = FlightSearch()
     flight_search.new_access_token() # Initial token fetch
     flight_search.city_search()
-    flight_search.start_scheduler()
+    # flight_search.start_scheduler()
