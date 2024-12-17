@@ -4,33 +4,28 @@ from dotenv import load_dotenv
 from pprint import pprint
 load_dotenv()
 
-#This class is responsible for talking to the Google Sheet.
 class DataManager:
 
     def __init__(self):
         self.api_url = os.getenv("SHEETY_URL")
-        # self.flight_search = FlightSearch()
-        # self.iata_codes = self.flight_search.city_search()
+        self.destination_data = {}
 
 
-    def get_iata(self, api_url=None, headers=None, params=None):
-        if api_url is None:
-            api_url = self.api_url
-        response = requests.get(url=api_url, headers=headers, params=params)
-        response.raise_for_status()  # Raise an exception for bad status codes (4xx or 5xx)
+    # Get all the data from the sheet
+    def get_destination_data(self):
+        response = requests.get(url=self.api_url)
         data = response.json()
-        pprint(data)
-        return data['prices']
+        self.destination_data = data['prices']
+        return self.destination_data
 
 
-    def update_iata_code(self, row_id, iata_code):
 
-        update_endpoint = f"{self.api_url}/{row_id}"
-        new_data = {
-            "price": {
-                "iataCode": iata_code
+    def update_iata_code(self):
+        for city in self.destination_data:
+            new_data = {
+                "price": {
+                    "iataCode": city["iataCode"]
+                }
             }
-        }
-        response = requests.put(update_endpoint, json=new_data)
-        return response.json()
-
+            response = requests.put(url=f"{self.api_url}/{city['id']}", json=new_data)
+            print(response.text)
