@@ -9,11 +9,13 @@ load_dotenv()
 #Structure the flight data.
 class FlightData:
 
-    def __init__(self, price, departure_airport_code):
+    def __init__(self, price, departure_airport_code, origin_airport, destination_airport, out_date, return_date):
         self.price = price
         self.departure_airport_code = departure_airport_code
-        self.departure_date = (datetime.now() + timedelta(days = 1)).strftime('%Y-%m-%d')
-        self.return_date = (datetime.now() + timedelta(days = 180)).strftime('%Y-%m-%d')
+        self.origin_airport = origin_airport
+        self.destination_airport = destination_airport
+        self.out_date = out_date
+        self.return_date = return_date
 
 
 
@@ -22,7 +24,7 @@ class FlightData:
         params = {
             "originLocationCode": "SYD",
             "destinationLocationCode": self.departure_airport_code,
-            "departureDate": self.departure_date,
+            "departureDate": self.out_date,
             "returnDate": self.return_date,
             "adults": 1,
             "currencyCode": "EUR",
