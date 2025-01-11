@@ -1,11 +1,18 @@
 import os
 from twilio.rest import Client
+import smtplib
 
 
 class NotificationManager:
 
     def __init__(self):
         self.client = Client(os.environ['TWILIO_SID'], os.environ["TWILIO_AUTH_TOKEN"])
+        self.email = os.getenv("MY_EMAIL")
+        self.email_password = os.getenv("EMAIL_PASSWORD")
+        self.twilio_virtual_number = os.environ["TWILIO_VIRTUAL_NUMBER"]
+        self.twilio_verified_number = os.environ["TWILIO_VERIFIED_NUMBER"]
+        self.whatsapp_number = os.environ["TWILIO_WHATSAPP_NUMBER"]
+        self.connection = smtplib.SMTP(os.getenv("EMAIL_PROVIDER_SMTP"))
 
     def send_sms(self, message_body):
         """
@@ -30,18 +37,32 @@ class NotificationManager:
         initialized.
         """
         message = self.client.messages.create(
-            from_=os.environ["TWILIO_VIRTUAL_NUMBER"],
+            from_=self.twilio_virtual_number,
             body=message_body,
-            to=os.environ["TWILIO_VIRTUAL_NUMBER"]
+            to=self.twilio_verified_number
         )
-        # Prints if successfully sent.
+
         print(message.sid)
 
 
     def send_whatsapp(self, message_body):
         message = self.client.messages.create(
-            from_=f'whatsapp:{os.environ["TWILIO_WHATSAPP_NUMBER"]}',
+            from_=f'whatsapp:{self.whatsapp_number}',
             body=message_body,
-            to=f'whatsapp:{os.environ["TWILIO_VERIFIED_NUMBER"]}'
+            to=f'whatsapp:{self.twilio_verified_number}'
         )
         print(message.sid)
+
+
+    def send_emails(self, email_list, email_body):
+        with self.connection:
+            self.connection.starttls()
+            self.connection.login(self.email, self.email_password)
+            for email in email_list:
+                self.connection.sendmail(
+                    from_addr=self.email,
+                    to_addrs=email,
+                    msg=f"Subject:New Low Price FLight!\n\n{email_body}".encode('utf-8')
+                )
+
+
