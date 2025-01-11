@@ -5,15 +5,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SHEETY_PRICES_ENDPOINT = ENDPOINT HERE
+SHEETY_PRICES_ENDPOINT = "https://api.sheety.co/6086af795a71634bbd86babbea2fdd5c/flightDeals/prices"
 
 
 class DataManager:
 
     def __init__(self):
-        self._user = os.environ["SHEETY_USRERNAME"]
-        self._password = os.environ["SHEETY_PASSWORD"]
-        self._authorization = HTTPBasicAuth(self._user, self._password)
+        self._user = os.environ["SHEETY_PRICE_URL"]
+        # self._password = os.environ["SHEETY_PASSWORD"]
+        # self._authorization = HTTPBasicAuth(self._user, self._password)
         self.destination_data = {}
 
     def get_destination_data(self):
