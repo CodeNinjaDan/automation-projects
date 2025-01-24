@@ -23,18 +23,13 @@ sign_in = driver.find_element(By.XPATH, value='//*[@id="base-contextual-sign-in-
 #Wait for page to load
 time.sleep(7)
 sign_in.click()
+
 enter_username = driver.find_element(By.ID, value="base-sign-in-modal_session_key")
 time.sleep(3)
 enter_username.send_keys(linkedin_user)
+
 enter_password = driver.find_element(By.ID, value="base-sign-in-modal_session_password")
 enter_password.send_keys(linkedin_pass)
+
 enter_logins = driver.find_element(By.XPATH, value='//*[@id="base-sign-in-modal"]/div/section/div/div/form/div[2]/button')
 enter_logins.click()
-
-time.sleep(10)
-# captcha = driver.find_element(By.XPATH, value='//*[@id="home_children_button"]')
-# captcha.click()
-#
-# time.sleep(10)
-# captcha_answer = driver.find_element(By.CLASS_NAME, "ChallengeSelectableOverlay__StyledElement-sc-6lu34v-0 gNTqiv")
-# captcha_answer.click()

@@ -1,11 +1,19 @@
 import os
 import requests
 from dotenv import load_dotenv
+from pprint import pprint
 
 load_dotenv()
 
 
 class DataManager:
+    """
+    This class is responsible for:
+    1. Getting the destination data
+    2. Updating the destination iata code
+    3. Getting the user's email from the Google sheet (entered from a Google Form)
+
+    """
 
     def __init__(self):
         self.prices_endpoint = os.environ["SHEETY_PRICE_URL"]
@@ -18,6 +26,8 @@ class DataManager:
         response = requests.get(url=self.prices_endpoint)
         data = response.json()
         # pprint(data)
+
+        #Gets and stores the whole table
         self.destination_data = data["prices"]
         return self.destination_data
 
