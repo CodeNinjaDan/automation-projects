@@ -101,12 +101,12 @@ class InternetSpeedTwitterBot:
         # login.click()
 
 
-        post_message = f"My promised internet speed was {PROMISED_DOWN}/{PROMISED_UP} but it is {self.down}/{self.up}."
+        post_message = f"My promised internet speed was {PROMISED_DOWN}mbps download/{PROMISED_UP}mbps upload but it is {self.down}/{self.up}."
         time.sleep(10)
         post_button = WebDriverWait(self.driver, 15).until(
             ec.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div[2]/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div/div'))
         )
-        # post_button = self.driver.find_element(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div[2]/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div/div[2]/div/div')
+        post_button.click()
         post_button.send_keys(post_message)
 
         send_button = WebDriverWait(self.driver, 15).until(
@@ -117,13 +117,21 @@ class InternetSpeedTwitterBot:
 
 
 test = InternetSpeedTwitterBot()
+test.tweet_at_provider()
 try:
     test.get_internet_speed()
     if float(test.down) < PROMISED_DOWN or float(test.up) < PROMISED_UP:
+        time.sleep(5)
         test.tweet_at_provider()
 
+    else:
+        print(f"Your internet speed is {test.down} mbps download/{test.up} mbps upload.")
+
 except Exception as e:
-    print(f"An error occured: {e}")
+    print(f"An error occurred: {e}")
+
+except TimeoutError as t:
+    print(f"An error occurred: {t}")
 
 finally:
     test.driver.quit()
