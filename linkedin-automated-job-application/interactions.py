@@ -35,26 +35,29 @@ try:
     job_results = WebDriverWait(driver, 10).until(
         ec.presence_of_all_elements_located((By.CSS_SELECTOR, ".DbiQFMuFHPKdmbUaxlfthbWfPXkiOneGMWQ"))
     )
+    print(job_results)
 
     #Iterate through each job result
     for job in job_results:
+        job.click()
         try:
             #find link or clickable element that leads to the job details page
-            job_link = WebDriverWait(driver, 10).until(
-                ec.element_to_be_clickable((By.CSS_SELECTOR, ".full-width.artdeco-entity-lockup__title.ember-view"))
-            )
-
-            job_link.click()
+            # job_link = WebDriverWait(driver, 15).until(
+            #     ec.element_to_be_clickable((By.CSS_SELECTOR, ".full-width.artdeco-entity-lockup__title.ember-view"))
+            # )
+            #
+            # job_link.click()
             # WebDriverWait(driver, 10).until(ec.number_of_windows_to_be(2))
             # driver.switch_to.window(driver.window_handles[1]) #Switch to new tab
 
             # save_button = WebDriverWait(job_link,10).until(
             #     ec.element_to_be_clickable((By.CSS_SELECTOR, ".jobs-save-button.artdeco-button.artdeco-button--secondary.artdeco-button--3"))
             # )
-            save_button = WebDriverWait(driver, 13).until(
-                ec.element_to_be_clickable(
-                    (By.CSS_SELECTOR, ".jobs-save-button.artdeco-button.artdeco-button--secondary.artdeco-button--3"))
-            )
+            # save_button = WebDriverWait(driver, 13).until(
+            #     ec.element_to_be_clickable(
+            #         (By.CSS_SELECTOR, ".jobs-save-button.artdeco-button.artdeco-button--secondary.artdeco-button--3"))
+            # )
+            save_button = driver.find_element(By.CSS_SELECTOR, ".jobs-save-button.artdeco-button.artdeco-button--secondary.artdeco-button--3")
             save_button.click()
 
             follow_button = WebDriverWait(driver,15).until(
