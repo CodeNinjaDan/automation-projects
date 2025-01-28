@@ -27,4 +27,10 @@ class GetHouseData:
 
 
     def scrape(self):
+        house_prices = [price.getText().strip("+/mo+ 1 bd") for price in
+                        self.soup.select("span.PropertyCardWrapper__StyledPriceLine")]
+
+        house_addresses = [address.getText().strip("\n ") for address in
+                           self.soup.select('address[data-test="property-card-addr"]')]
+        house_urls = [url['href'] for url in self.soup.select(".StyledPropertyCardDataWrapper a")]
 
