@@ -27,13 +27,21 @@ class GetHouseData:
 
 
     def scrape(self):
-        house_addresses = [address.getText().strip("\n ") for address in
-                           self.soup.select('address[data-test="property-card-addr"]')]
+        if self.soup is None:
+            return [], [], []
 
-        house_prices = [price.getText().strip("+/mo+ 1 bd") for price in
-                        self.soup.select("span.PropertyCardWrapper__StyledPriceLine")]
+        try:
+            house_addresses = [address.getText().strip("\n ") for address in
+                               self.soup.select('address[data-test="property-card-addr"]')]
 
-        house_urls = [url['href'] for url in self.soup.select(".StyledPropertyCardDataWrapper a")]
+            house_prices = [price.getText().strip("+/mo+ 1 bd") for price in
+                            self.soup.select("span.PropertyCardWrapper__StyledPriceLine")]
+
+            house_urls = [url['href'] for url in self.soup.select(".StyledPropertyCardDataWrapper a")]
+
+        except Exception as e:
+            print(f"Error during scraping: {e}")
+            return [], [], []
 
         return house_addresses, house_prices, house_urls
 
